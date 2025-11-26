@@ -1,4 +1,8 @@
 <?php
+// view_post.php
+// Include helper functions
+require_once 'functions.php';
+
 // Database connection
 $conn = new mysqli('localhost', 'root', '', 'blog');
 
@@ -21,21 +25,24 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $title = htmlentities($row['title']);
-        $content = nl2br(htmlspecialchars($row['content']));
+        $content = format_content($row['content']); // Use formatting function
+        $postFound = true;
     } else {
-        // If no post ID is provided, display an error message
+        // If no post found with that ID
         $title = 'Post not found';
         $content = '<p>The post you are looking for does not exist.</p>';
+        $postFound = false;
     }
 
-    // Close the database connection
+    // Close the statement
     $stmt->close();
-    $conn->close();
 } else {
-    // If no post ID is provided, display an error message
-    $title = 'Post not found';
-    $content = '<p>The post you are looking for does not exist.</p>';
+    // If no post ID is provided, redirect to homepage
+    header('Location: index.php');
+    exit;
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -46,6 +53,32 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     <title><?php echo $title; ?></title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://kit.fontawesome.com/e61d547b58.js" crossorigin="anonymous"></script>
+    <style>
+        .post-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-edit {
+            background-color: #28a745;
+        }
+        .btn-edit:hover {
+            background-color: #218838;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        .btn-back {
+            background-color: #6c757d;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
 </head>
 <body>
     <header class="banner">
@@ -55,7 +88,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="add_post.php">Add Post</a></li>
-                    <li><a href="<?php echo 'view_post.php'; ?>">View Post</a></li>
                 </ul>
             </nav>
         </div>
@@ -66,11 +98,18 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
     <main>
         <div class="container">
-            <?php if ($title !== 'Post not found'): ?>
-                <h2><?php echo htmlentities($row['title']); ?></h2>
-                <?php echo nl2br($content); ?>
+            <?php if ($postFound): ?>
+                <div class="post">
+                    <?php echo $content; ?>
+                </div>
+                <div class="post-actions">
+                    <a href="index.php" class="btn btn-back">← Back to Home</a>
+                    <a href="edit_post.php?id=<?php echo $id; ?>" class="btn btn-edit">✏️ Edit Post</a>
+                    <a href="delete_post.php?id=<?php echo $id; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.');">🗑️ Delete Post</a>
+                </div>
             <?php else: ?>
                 <p>The post you are looking for does not exist.</p>
+                <a href="index.php" class="btn btn-back" style="margin-top: 20px;">← Back to Home</a>
             <?php endif; ?>
         </div>
     </main>

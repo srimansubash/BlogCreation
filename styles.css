@@ -84,14 +84,34 @@ main {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.post h1 {
+  font-size: 2em;
+  margin: 20px 0 15px 0;
+  color: #333;
+}
+
 .post h2 {
   font-size: 1.5em;
-  margin-bottom: 10px;
+  margin: 18px 0 12px 0;
+  color: #333;
+}
+
+.post h3 {
+  font-size: 1.3em;
+  margin: 15px 0 10px 0;
+  color: #444;
+}
+
+.post hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 2px solid #ddd;
 }
 
 .post p {
   font-size: 1em;
   line-height: 1.6;
+  margin-bottom: 10px;
 }
 
 .read-more {
@@ -111,6 +131,12 @@ main {
   margin-bottom: 20px;
 }
 
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
 .form-control {
   width: 100%;
   padding: 10px;
@@ -124,6 +150,12 @@ main {
 .form-control:focus {
   border-color: #007bff;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+textarea.form-control {
+  min-height: 200px;
+  resize: vertical;
 }
 
 .btn {
@@ -138,6 +170,7 @@ main {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .btn:hover {
@@ -147,6 +180,10 @@ main {
 .error {
   color: red;
   margin-bottom: 20px;
+  padding: 10px;
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-radius: 5px;
 }
 
 /* Footer styles */
@@ -164,13 +201,22 @@ footer p {
 
 /* Responsive styles */
 @media (max-width: 768px) {
+  .navbar {
+      flex-direction: column;
+  }
+
   .navbar ul {
       flex-direction: column;
       align-items: center;
+      margin-top: 15px;
   }
 
   .navbar li {
       margin: 10px 0;
+  }
+
+  .banner {
+      height: 300px;
   }
 
   .banner-text h1 {
